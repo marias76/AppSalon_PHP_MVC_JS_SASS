@@ -6,12 +6,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "gulp"
+    "build": "gulp build",
+    "dev": "gulp",
+    "watch": "gulp"
   },
   "license": "ISC",
   "devDependencies": {
     "glob": "^10.3.12",
     "gulp": "^5.0.0",
+    "gulp-cli": "^3.0.0",
     "gulp-sass": "^5.1.0",
     "gulp-terser": "^2.1.0",
     "sass": "^1.75.0",

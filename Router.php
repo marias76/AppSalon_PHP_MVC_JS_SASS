@@ -28,7 +28,9 @@ class Router
 
         // $auth = $_SESSION['login'] ?? null;
 
-        $currentUrl = $_SERVER['PATH_INFO'] ?? '/';
+        $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $currentUrl = $_SERVER['PATH_INFO'] ?? $requestUri;
+        $currentUrl = rtrim($currentUrl, '/') ?: '/';
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === 'GET') {
