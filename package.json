@@ -8,6 +8,7 @@
   "scripts": {
     "build": "gulp build",
     "dev": "gulp",
+    "gulp": "gulp",
     "watch": "gulp"
   },
   "license": "ISC",
