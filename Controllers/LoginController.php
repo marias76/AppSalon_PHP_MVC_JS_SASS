@@ -13,8 +13,10 @@ class LoginController {
     public static function logout() {
         echo "Desde el logoutController";
     }
-    public static function olvide() {
-        echo "Desde el olvideController";
+    public static function olvide(Router $router) {
+        $router->render('auth/olvide', [
+            
+        ]);  
         
     }
     public static function recuperar() {
