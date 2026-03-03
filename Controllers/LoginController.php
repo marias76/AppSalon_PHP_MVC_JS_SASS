@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Usuario;
 use MVC\Router;
 
 class LoginController {
@@ -23,8 +24,21 @@ class LoginController {
         echo "<h1>Recuperar Contraseña</h1>";
     }
     public static function crearCuenta(Router $router) {
-        $router->render('auth/crearCuenta', [
+        $usuario = new Usuario;
+        
+        // Alertas vacias
+        $alertas = [];
 
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $usuario->sincronizar($_POST);
+                $alertas = $usuario->validarNuevaCuenta(); 
+                // debuguear($alertas);
+
+        }
+
+        $router->render('auth/crearCuenta', [
+            'usuario' => $usuario, 
+            'alertas' => $alertas
         
         ]);
     }

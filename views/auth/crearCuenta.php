@@ -1,22 +1,24 @@
 <h1 class="nombre-pagina">Crear Cuenta</h1>
 <p class="descripcion-pagina">Crea tu cuenta en AppSalon</p>
 
+<?php include __DIR__ . '/../templates/alertas.php'; ?>
+
 <form class="formulario" method="post" action="/crearCuenta">
     <div class="campo">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre">
+        <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" value="<?php echo $usuario->nombre; ?>">
     </div>
     <div class="campo">
-        <label for="apellidos">Apellidos</label>
-        <input type="text" id="apellidos" name="apellidos" placeholder="Tus Apellidos">
+        <label for="apellido">Apellidos</label>
+        <input type="text" id="apellido" name="apellido" placeholder="Tus Apellidos" value="<?php echo $usuario->apellido; ?>">
     </div>
     <div class="campo">
         <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono" placeholder="Tu Teléfono">
+        <input type="text" id="telefono" name="telefono" placeholder="Tu Teléfono" value="<?php echo $usuario->telefono; ?>">
     </div>
     <div class="campo">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Tu Email">
+        <input type="email" id="email" name="email" placeholder="Tu Email" value="<?php echo $usuario->email; ?>">
     </div>
     <div class="campo">
         <label for="password">Contraseña</label>
