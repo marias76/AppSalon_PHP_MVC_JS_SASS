@@ -6,6 +6,12 @@
     @media (min-width: v.$telefono) {
         @content;
     }
+    img {
+          max-width: 100%;
+            height: auto;
+}
+
+
 }
 @mixin tablet {
     @media (min-width: v.$tablet) {

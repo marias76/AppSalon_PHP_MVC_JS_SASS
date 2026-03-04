@@ -50,4 +50,24 @@ class Usuario extends ActiveRecord {
         }
         return self::$alertas;
     }
+
+    // revisa si el usuario ya existe
+    public function existeUsuario() {
+        $query = "SELECT * FROM " . self::$tabla . " WHERE email = '" . $this->email . "' LIMIT 1";
+        $resultado = self::$db->query($query);
+        if($resultado->num_rows) {
+            self::$alertas['error'][] = 'El Usuario ya esta registrado';
+
+        }
+        return $resultado;
+    }
+    public function hashPassword() {
+        $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+    }
+    public function crearToken() {
+        $this->token = uniqid();
+    }   
+    public function enviarEmail() {
+        // Crear el objeto de email
+    }
 }
