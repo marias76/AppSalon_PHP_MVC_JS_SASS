@@ -1,8 +1,10 @@
 <h1 class="nombre-pagina">Login</h1>
 <p class="descripcion-pagina">Inicia sesión en tu cuenta</p>
 
+<!-- Incluir el archivo de alertas para mostrar mensajes de error o éxito -->
 <?php include_once __DIR__ . '/../templates/alertas.php'; ?>
 
+<!-- Formulario de inicio de sesión -->
 <form class="formulario" method="post" action="/">
 
     <div class="campo">
@@ -21,3 +23,23 @@
         <a href="/olvide">¿Olvidaste tu password?</a>
     </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const emailInput = document.querySelector('#email');
+
+        if (!emailInput) {
+            return;
+        }
+
+        const limpiarAlertas = function () {
+            const alertas = document.querySelectorAll('.alerta');
+            alertas.forEach(function (alerta) {
+                alerta.remove();
+            });
+        };
+
+        emailInput.addEventListener('click', limpiarAlertas);
+        emailInput.addEventListener('focus', limpiarAlertas);
+    });
+</script>
