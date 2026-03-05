@@ -79,6 +79,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(60) DEFAULT NULL,
   `apellido` varchar(60) DEFAULT NULL,
   `email` varchar(30) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
   `telefono` varchar(10) DEFAULT NULL,
   `admin` tinyint(1) DEFAULT NULL,
   `confirmado` tinyint(1) DEFAULT NULL,
@@ -147,3 +148,5 @@ INSERT INTO servicios ( nombre, precio ) VALUES
         ('Victoria', 'Perez', '10:00:00', '2021-07-02', 'Uñas, Tinte'),
         ('Jimena', 'Leon', '10:30:00', '2021-07-30', 'Uñas, Corte de Cabello Mujer'),
         ('Raquel' ,'Peña', '20:30:00', '2021-06-25', 'Corte de Cabello Mujer');
+
+ALTER TABLE usuarios ADD COLUMN password VARCHAR(60) NOT NULL AFTER email;

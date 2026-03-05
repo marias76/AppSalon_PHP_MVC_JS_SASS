@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /AppSalon_PHP_MVC_JS_SASS/
+
+    # Si ya apunta a /public, no reescribir.
+    RewriteRule ^public/ - [L]
+
+    # Si existe archivo o carpeta en la raiz, respetarlo.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Enviar el resto al front-controller dentro de /public.
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>

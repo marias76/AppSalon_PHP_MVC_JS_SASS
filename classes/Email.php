@@ -28,12 +28,20 @@ class Email {
         $mail->addAddress($this->email, $this->nombre);
         $mail->Subject = 'Confirma tu cuenta';
 
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/public/index.php'));
+        $fallbackBaseUrl = $scheme . '://' . $host . rtrim($scriptDir, '/');
+
+        $baseUrl = rtrim($_ENV['APP_URL'] ?? $fallbackBaseUrl, '/');
+        $confirmUrl = $baseUrl . '/confirmarCuenta?token=' . urlencode($this->token);
+
         // set HTML
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
         $contenido = '<html>';
         $contenido .= '<p><strong>Hola ' . $this->nombre . '</strong>, has creado tu cuenta en AppSalon, solo debes confirmarla presionando el siguiente enlace:</p>';
-        $contenido .= '<p>Presiona aquí: <a href="http://localhost/AppSalon_PHP_MVC_JS_SASS/confirmar?token=' . $this->token . '">Confirmar Cuenta</a></p>';
+        $contenido .= '<p>Presiona aquí: <a href="' . $confirmUrl . '">Confirmar Cuenta</a></p>';
         $contenido .= '<p>Si tu no solicitaste esta cuenta, puedes ignorar este mensaje</p>';
         $contenido .= '</html>';
         $mail->Body = $contenido;

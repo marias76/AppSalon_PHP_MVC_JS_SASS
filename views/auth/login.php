@@ -1,6 +1,8 @@
 <h1 class="nombre-pagina">Login</h1>
 <p class="descripcion-pagina">Inicia sesión en tu cuenta</p>
 
+<?php include_once __DIR__ . '/../templates/alertas.php'; ?>
+
 <form class="formulario" method="post" action="/">
 
     <div class="campo">

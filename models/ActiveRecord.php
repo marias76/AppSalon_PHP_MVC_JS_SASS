@@ -1,5 +1,9 @@
 <?php
 namespace Model;
+
+/**
+ * @property int|string|null $id
+ */
 class ActiveRecord {
 
     // Base DE DATOS
@@ -115,6 +119,16 @@ class ActiveRecord {
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
+    public static function where($columna, $valor) {
+        if(!in_array($columna, static::$columnasDB, true)) {
+            return null;
+        }
+
+        $valor = self::$db->escape_string(trim((string) $valor));
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE TRIM({$columna}) = '{$valor}' LIMIT 1";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado ) ;
+    }
 
     // Obtener Registros con cierta cantidad
     public static function get($limite) {
@@ -131,9 +145,9 @@ class ActiveRecord {
         // Insertar en la base de datos
         $query = " INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES (' "; 
+        $query .= " ) VALUES ('";
         $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+        $query .= "') ";
 
         // Resultado de la consulta
         $resultado = self::$db->query($query);
