@@ -1,3 +1,4 @@
+<!--  vista login.php -->
 <h1 class="nombre-pagina">Login</h1>
 <p class="descripcion-pagina">Inicia sesión en tu cuenta</p>
 
@@ -24,6 +25,7 @@
     </div>
 </form>
 
+<!-- Script para limpiar las alertas cuando el usuario hace clic o enfoca el campo de email -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const emailInput = document.querySelector('#email');

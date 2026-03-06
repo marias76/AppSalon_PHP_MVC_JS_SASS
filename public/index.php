@@ -1,8 +1,12 @@
 <?php 
 // Archivo de entrada principal de la aplicación
 require_once __DIR__ . '/../includes/app.php';
+
+// Importar el Router y el Controlador de Login
 use Controllers\LoginController;
 use MVC\Router;
+
+// Importar el Router y el Controlador de Login
 $router = new Router();
 
 //iniciar sesion

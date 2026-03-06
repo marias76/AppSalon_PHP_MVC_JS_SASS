@@ -1,4 +1,5 @@
 <?php
+// Modelo de Usuario
 namespace Model;
 
 // Modelo de Usuario
@@ -72,6 +73,7 @@ class Usuario extends ActiveRecord {
         }
         return self::$alertas;
     }
+
     // mensaje de validacion para el nuevo password
     public function validarPassword() {
         if(!$this->password) {
@@ -92,18 +94,22 @@ class Usuario extends ActiveRecord {
         }
         return $resultado;
     }
+
     // hashea el password
     public function hashPassword() {
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
     }
+
     // genera un token unico para confirmar la cuenta
     public function crearToken() {
         $this->token = uniqid();
     }   
+
     // envia el email de confirmacion para crear la cuenta
     public function enviarEmail() {
         // Crear el objeto de email
     }
+    
     // Verificar el password para iniciar sesion
     public function verificarPasswordAndVerificado($password) {
         $resultado = password_verify($password, $this->password);

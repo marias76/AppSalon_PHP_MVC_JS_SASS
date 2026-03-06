@@ -1,8 +1,11 @@
+ <!-- Vista para crear una cuenta de usuario -->
 <h1 class="nombre-pagina">Crear Cuenta</h1>
 <p class="descripcion-pagina">Crea tu cuenta en AppSalon</p>
 
+<!-- Incluir el archivo de alertas para mostrar mensajes de error o éxito -->
 <?php include __DIR__ . '/../templates/alertas.php'; ?>
 
+<!-- Formulario de creación de cuenta -->
 <form class="formulario" method="post" action="/crearCuenta">
     <div class="campo">
         <label for="nombre">Nombre</label>
@@ -32,6 +35,7 @@
 
 </form>
 
+<!-- Acciones -->
 <div class="acciones">
     <a href="/">¿Ya tienes una cuenta? Iniciar Sesión</a>
     <a href="/olvide">¿Olvidaste tu password?</a>

@@ -1,3 +1,6 @@
+<!-- Este es el layout principal de la aplicación, es decir, 
+ la estructura HTML que se va a cargar en todas las páginas de la aplicación, y dentro de esta estructura se va a cargar el contenido dinámico de cada página, 
+ dependiendo de la página que se visite. -->
 <!DOCTYPE html>
 <html lang="es">
 
@@ -20,6 +23,7 @@
             <?php echo $contenido; ?>
         </div>
     </div>
+    
 </body>
 
 </html>

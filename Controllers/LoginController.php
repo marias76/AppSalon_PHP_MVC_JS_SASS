@@ -1,4 +1,5 @@
 <?php
+// Controlador para el Login, Registro, Recuperar Contraseña y Confirmar Cuenta
 namespace Controllers;
 use Model\Usuario;
 use Classes\Email;

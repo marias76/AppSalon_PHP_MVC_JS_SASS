@@ -1,11 +1,17 @@
 <IfModule mod_rewrite.c>
+    # Activa el motor de reescritura de Apache
     RewriteEngine On
 
-    # Si existe archivo o carpeta física, no redirigir
+    # --- Excepciones ---
+    # Si la petición apunta a un archivo real, detener aquí
     RewriteCond %{REQUEST_FILENAME} -f [OR]
+    # Si la petición apunta a una carpeta real, detener aquí
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # Front controller
+    # --- Front Controller ---
+    # Todas las demás rutas se envían a index.php
+    # L   = última regla aplicada
+    # QSA = conserva query string (?a=1&b=2)
     RewriteRule ^ index.php [L,QSA]
 </IfModule>

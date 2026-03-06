@@ -1,9 +1,11 @@
 <?php
+// Modelo de Active Record
 namespace Model;
 
 /**
  * @property int|string|null $id
  */
+// Modelo de Active Record
 class ActiveRecord {
 
     // Base DE DATOS
@@ -18,7 +20,7 @@ class ActiveRecord {
     public static function setDB($database) {
         self::$db = $database;
     }
-
+    // Definir alertas
     public static function setAlerta($tipo, $mensaje) {
         static::$alertas[$tipo][] = $mensaje;
     }
@@ -27,7 +29,7 @@ class ActiveRecord {
     public static function getAlertas() {
         return static::$alertas;
     }
-
+    // Validación
     public function validar() {
         static::$alertas = [];
         return static::$alertas;
@@ -122,6 +124,8 @@ class ActiveRecord {
     /**
      * @return static|null
      */
+    
+    // Busca un registro por su token
     public static function where($columna, $valor) {
         if(!in_array($columna, static::$columnasDB, true)) {
             return null;

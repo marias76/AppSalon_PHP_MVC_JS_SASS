@@ -1,5 +1,5 @@
 <?php
-
+// Funciones para debuguear y sanitizar el HTML
 function debuguear($variable) : string {
     echo "<pre>";
     var_dump($variable);
