@@ -25,27 +25,30 @@ class LoginController {
 
                 // Verificar que el usuario este confirmado
                 if($usuario){
-                    // Verificar el password
+                    // Verificar password y confirmación
                     $usuario->verificarPasswordAndVerificado($auth->password);
-                    // Autenticar el usuario / Iniciar la sesion
-                    session_start();
-                    $_SESSION['id'] = $usuario->id; 
-                    $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
-                    $_SESSION['email'] = $usuario->email; 
-                    $_SESSION['login'] = true; 
-                    
-                    // Redireccionar al usuario
-                    if($usuario->admin === "1") {
-                        $_SESSION['admin'] = $usuario->admin ?? null;
-                        header('Location: /admin');
-                    }else{
-                        header('Location: /cita');
-                    }  
+
+                    // Solo iniciar sesión si NO hay alertas
+                    $alertas = Usuario::getAlertas();
+                    if(empty($alertas)) {
+                        session_start();
+                        $_SESSION['id'] = $usuario->id; 
+                        $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
+                        $_SESSION['email'] = $usuario->email; 
+                        $_SESSION['login'] = true; 
+                        
+                        if($usuario->admin === "1") {
+                            $_SESSION['admin'] = $usuario->admin ?? null;
+                            header('Location: /admin');
+                            exit;
+                        } else {
+                            header('Location: /cita'); // revisa si tu ruta real es /cita o /citas
+                            exit;
+                        }
+                    }
                 }else{
-                    // Usuario no encontrado
                     Usuario::setAlerta('error', 'Usuario No Encontrado');
                 }
-                
             }
         }
 
