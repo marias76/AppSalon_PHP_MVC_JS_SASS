@@ -150,3 +150,8 @@ INSERT INTO servicios ( nombre, precio ) VALUES
         ('Raquel' ,'Peña', '20:30:00', '2021-06-25', 'Corte de Cabello Mujer');
 
 ALTER TABLE usuarios ADD COLUMN password VARCHAR(60) NOT NULL AFTER email;
+
+-- pregunta
+-- he activado Inline Suggestions, pero no veo cambios
+
+-- ya no autocompleta líneas enteras basándose en patrones aprendidos de GitHub,

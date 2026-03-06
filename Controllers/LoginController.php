@@ -31,7 +31,9 @@ class LoginController {
                     // Solo iniciar sesión si NO hay alertas
                     $alertas = Usuario::getAlertas();
                     if(empty($alertas)) {
-                        session_start();
+                        if (session_status() !== PHP_SESSION_ACTIVE) {
+                            session_start();
+                        }
                         $_SESSION['id'] = $usuario->id; 
                         $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
                         $_SESSION['email'] = $usuario->email; 
@@ -52,7 +54,8 @@ class LoginController {
             }
         }
 
-    $alertas = Usuario::getAlertas();   
+    $alertasModelo = Usuario::getAlertas();
+    $alertas = array_merge_recursive($alertas, $alertasModelo);
     // render a la vista
         $router->render('auth/login', [
             'alertas' => $alertas
@@ -133,6 +136,9 @@ class LoginController {
 
                 $resultado = $usuario->guardar();
                 if($resultado) {
+                    $_SESSION['alertas'] = [
+                        'exito' => ['Contraseña actualizada correctamente']
+                    ];
                     header('Location: /');
                     exit;
                 }

@@ -1,8 +1,8 @@
+// Archivo SCSS para los estilos de los botones
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
 .boton{
-    @include m.boton(v.$azul,v.$blanco);
-    border-radius: v.$radio;
+    @include m.boton(v.$azul,v.$blanco);    
 }
 

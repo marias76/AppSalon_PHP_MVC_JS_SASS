@@ -29,6 +29,16 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const emailInput = document.querySelector('#email');
+        const alertasExito = document.querySelectorAll('.alerta.exito');
+
+        // Ocultar automaticamente mensajes de exito para no saturar la pantalla.
+        if (alertasExito.length) {
+            setTimeout(function () {
+                alertasExito.forEach(function (alerta) {
+                    alerta.remove();
+                });
+            }, 4000);
+        }
 
         if (!emailInput) {
             return;

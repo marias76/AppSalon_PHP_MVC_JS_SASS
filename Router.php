@@ -25,7 +25,9 @@ class Router
     public function comprobarRutas()
     {        
         // Proteger Rutas...
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         // Arreglo de rutas protegidas...     
         $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
