@@ -40,3 +40,15 @@
     <a href="/">¿Ya tienes una cuenta? Iniciar Sesión</a>
     <a href="/olvide">¿Olvidaste tu password?</a>
 </div>
+
+<script>
+    const inputsFormulario = document.querySelectorAll('.formulario input');
+
+    inputsFormulario.forEach(function (input) {
+        input.addEventListener('click', function () {
+            document.querySelectorAll('.alerta').forEach(function (alerta) {
+                alerta.remove();
+            });
+        });
+    });
+</script>
