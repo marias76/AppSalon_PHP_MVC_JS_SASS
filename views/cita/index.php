@@ -48,7 +48,9 @@
 
 <?php 
 // Incluir el script de la aplicación para manejar la lógica del formulario
+    $rutaScript = __DIR__ . '/../../public/build/js/app.js';
+    $versionScript = file_exists($rutaScript) ? filemtime($rutaScript) : time();
     $script = "
-        <script src='/build/js/app.js'></script>
+        <script src='/build/js/app.js?v={$versionScript}'></script>
     ";
 ?>

@@ -5,16 +5,28 @@ let pasoFinal = 3;
 
 // Función para iniciar la app
 document.addEventListener('DOMContentLoaded', function() {
-    iniciarApp();
+    console.log('[AppSalon] DOM cargado');
+    try {
+        iniciarApp();
+    } catch (error) {
+        console.error('[AppSalon] Error al iniciar la app:', error);
+    }
 });
 // Función para iniciar la app
 function iniciarApp() {
+    const totalTabs = document.querySelectorAll('.tabs button').length;
+    if (!totalTabs) {
+        console.warn('[AppSalon] No se encontraron tabs para iniciar la app');
+        return;
+    }
+
     pasoFinal = Math.max(1, document.querySelectorAll('.tabs button').length);
     mostrarSeccion(); // Muestra la sección correspondiente al paso actual
     tabs(); // Función para manejar las pestañas   
     botonesPaginador(); // Función para manejar los botones del paginador 
     paginaSiguiente(); // Función para manejar el botón siguiente
     paginaAnterior(); // Función para manejar el botón anterior
+    consultarAPI(); // Función para consultar la API de PHP
 }
 
 // Función para mostrar la sección correspondiente al paso actual
@@ -98,4 +110,59 @@ function paginaAnterior() {
         paso--;
         botonesPaginador();
     });
+}
+
+// Función para consultar la API de PHP
+async function consultarAPI() {
+    try {
+        const url = '/api/servicios';
+        console.log('[AppSalon] Consultando API:', url);
+        const resultado = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log('[AppSalon] Respuesta API:', resultado.status, resultado.statusText);
+
+        if (!resultado.ok) {
+            throw new Error(`Error HTTP ${resultado.status}: ${resultado.statusText}`);
+        }
+
+        const servicios = await resultado.json();
+        console.log('Servicios cargados:', servicios);
+        mostrarServicios(servicios);
+    } catch (error) {
+        console.error('No se pudieron cargar los servicios:', error);
+    }
+}   
+// Función para mostrar los servicios en el DOM
+function mostrarServicios(servicios) {
+    servicios.forEach(servicio => {
+        const { id, nombre, precio } = servicio;
+
+        const nombreServicio = document.createElement('P');
+        nombreServicio.classList.add('nombre-servicio');
+        nombreServicio.textContent = nombre;
+
+        const precioServicio = document.createElement('P');
+        precioServicio.classList.add('precio-servicio');
+        precioServicio.textContent = `$${precio}`;
+
+        const servicioDiv = document.createElement('DIV');
+        servicioDiv.classList.add('servicio');
+        servicioDiv.dataset.idServicio = id;
+
+        servicioDiv.appendChild(nombreServicio);
+        servicioDiv.appendChild(precioServicio);
+
+        // Agregar el servicio al contenedor de servicios en el DOM (vista)
+        document.querySelector('#servicios').appendChild(servicioDiv);
+
+
+
+    });
+
 }
