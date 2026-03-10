@@ -3,6 +3,14 @@ let paso= 1;
 let pasoInicial = 1;
 let pasoFinal = 3;
 
+// Objeto para almacenar la información de la cita
+const cita = {  
+    nombre: '',
+    fecha: '',
+    hora: '',
+    servicios: []
+};
+
 // Función para iniciar la app
 document.addEventListener('DOMContentLoaded', function() {
     console.log('[AppSalon] DOM cargado');
@@ -27,6 +35,10 @@ function iniciarApp() {
     paginaSiguiente(); // Función para manejar el botón siguiente
     paginaAnterior(); // Función para manejar el botón anterior
     consultarAPI(); // Función para consultar la API de PHP
+    nombreCliente(); // Función para obtener el nombre del cliente
+    seleccionarFecha(); // Función para obtener la fecha de la cita
+    seleccionarHora(); // Función para obtener la hora de la cita
+
 }
 
 // Función para mostrar la sección correspondiente al paso actual
@@ -154,6 +166,9 @@ function mostrarServicios(servicios) {
         const servicioDiv = document.createElement('DIV');
         servicioDiv.classList.add('servicio');
         servicioDiv.dataset.idServicio = id;
+        servicioDiv.onclick = function() {
+            seleccionarServicio(servicio);
+        };
 
         servicioDiv.appendChild(nombreServicio);
         servicioDiv.appendChild(precioServicio);
@@ -166,3 +181,72 @@ function mostrarServicios(servicios) {
     });
 
 }
+// Función para seleccionar un servicio y agregarlo a la cita
+function seleccionarServicio(servicio) {
+    const { id } = servicio;    
+    const {servicios} = cita;
+
+    // Seleccionar el div del servicio que se hizo clic
+    const divServicio = document.querySelector(`[data-id-servicio="${servicio.id}"]`);
+
+    // comprobar si el servicio ya está seleccionado
+    if(servicios.some( agregado => agregado.id === id)){
+        // eliminar el servicio del arreglo de servicios
+        cita.servicios = servicios.filter(agregado => agregado.id !== id);
+        divServicio.classList.remove('seleccionado');
+        return;
+    }else{
+        // agregar el servicio al arreglo de servicios
+        cita.servicios = [...servicios, servicio];
+        divServicio.classList.add('seleccionado');
+    }
+
+    console.log(cita);
+
+}
+
+// Función para obtener el nombre del cliente
+function nombreCliente() {
+    cita.nombre = document.querySelector('#nombre').value;
+
+    
+}
+
+// Función para obtener la fecha de la cita
+function seleccionarFecha(){
+    const inputFecha = document.querySelector('#fecha');
+    inputFecha.addEventListener('input', function(e){
+        const dia = new Date(e.target.value).getUTCDay();
+        if([0].includes(dia)){
+            e.target.value = '';
+            mostrarAlerta('No atendemos los Domingos, por favor, seleccione otro día','error' );
+        }else{
+            cita.fecha = e.target.value;
+        }
+    }); 
+
+};  
+// funcion alerta para mostrar mensajes al usuario
+function mostrarAlerta(mensaje, tipo){
+    
+    // eliminar alerta previa
+    const alertaExistente = document.querySelector('.alerta');
+    if(alertaExistente){
+        alertaExistente.remove();
+    }   
+
+    // crear alerta
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+    alerta.classList.add(tipo);
+
+    // agregar alerta al DOM
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild(alerta);
+    setTimeout(() => {
+        alerta.remove();
+    }, 3000);
+
+}
+

@@ -20,6 +20,13 @@
         transition-duration: 0.3s;
         text-align: center;
 
+        &.seleccionado{
+            background-color: v.$azul;
+            P{
+                color: v.$blanco;
+            }
+        }
+
         &:hover{
             transform: scale(1.1);
             -webkit-transform: scale(1.1);
