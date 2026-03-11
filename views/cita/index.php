@@ -35,7 +35,7 @@
             </div>
         </form>
     </div>    
-    <div id="paso-3" class="seccion">
+    <div id="paso-3" class="seccion contenido-resumen">
         <h2>Resumen y Confirmación</h2>
         <p class="text-center">Verifica que la Información sea correcta antes de confirmar tu cita</p>
     </div>    

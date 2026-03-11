@@ -38,7 +38,7 @@ function iniciarApp() {
     nombreCliente(); // Función para obtener el nombre del cliente
     seleccionarFecha(); // Función para obtener la fecha de la cita
     seleccionarHora(); // Función para obtener la hora de la cita
-
+    mostrarResumen(); // Función para mostrar el resumen de la cita
 }
 
 // Función para mostrar la sección correspondiente al paso actual
@@ -72,6 +72,10 @@ function tabs() {
         boton.addEventListener('click', function(e) {
             paso = Number(e.target.dataset.paso);
             botonesPaginador();
+
+            if(paso === 3){
+                mostrarResumen();   
+            }
         });
     });
 }
@@ -88,7 +92,8 @@ function botonesPaginador() {
     botonAnterior.classList.toggle('ocultar', paso <= 1);
     botonSiguiente.classList.toggle('ocultar', paso >= pasoFinal);
 
-    mostrarSeccion();
+    mostrarSeccion(); 
+    mostrarResumen();   
 }
 
 // Función para manejar el botón siguiente
@@ -175,9 +180,6 @@ function mostrarServicios(servicios) {
 
         // Agregar el servicio al contenedor de servicios en el DOM (vista)
         document.querySelector('#servicios').appendChild(servicioDiv);
-
-
-
     });
 
 }
@@ -202,14 +204,11 @@ function seleccionarServicio(servicio) {
     }
 
     console.log(cita);
-
 }
 
 // Función para obtener el nombre del cliente
 function nombreCliente() {
     cita.nombre = document.querySelector('#nombre').value;
-
-    
 }
 
 // Función para obtener la fecha de la cita
@@ -219,15 +218,31 @@ function seleccionarFecha(){
         const dia = new Date(e.target.value).getUTCDay();
         if([0].includes(dia)){
             e.target.value = '';
-            mostrarAlerta('No atendemos los Domingos, por favor, seleccione otro día','error' );
+            mostrarAlerta('No atendemos los Domingos','error', '.formulario' );
         }else{
             cita.fecha = e.target.value;
         }
     }); 
-
+    mostrarResumen();   
 };  
+
+// Función para obtener la hora de la cita
+function seleccionarHora(){
+    const inputHora = document.querySelector('#hora');  
+    inputHora.addEventListener('input', function(e){
+        const horaCita = e.target.value;
+        const hora = horaCita.split(':')[0];
+        if(hora < 10 || hora > 18){
+            e.target.value = '';
+            mostrarAlerta('Selecciona una hora entre las 10:00 y las 18:00','error', '.formulario' );
+        }else{
+            cita.hora = e.target.value;
+        }
+    });
+}
+
 // funcion alerta para mostrar mensajes al usuario
-function mostrarAlerta(mensaje, tipo){
+function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
     
     // eliminar alerta previa
     const alertaExistente = document.querySelector('.alerta');
@@ -242,11 +257,29 @@ function mostrarAlerta(mensaje, tipo){
     alerta.classList.add(tipo);
 
     // agregar alerta al DOM
-    const formulario = document.querySelector('.formulario');
-    formulario.appendChild(alerta);
-    setTimeout(() => {
-        alerta.remove();
-    }, 3000);
+    const referencia = document.querySelector(elemento);
+    if(!referencia){
+        return;
+    }
+
+    referencia.appendChild(alerta);
+
+    if(desaparece){
+        setTimeout(() => {
+            alerta.remove();
+        }, 3000);
+    }
 
 }
+// Función para mostrar el resumen de la cita
+function mostrarResumen() {
+    const resumen = document.querySelector('.contenido-resumen');
 
+    if(Object.values(cita).includes('') || cita.servicios.length === 0){
+        mostrarAlerta('Faltan datos de la cita, asegúrate de completar nombre, fecha, hora y seleccionar al menos un servicio','error', '.contenido-resumen', false);
+         return;
+    }else{
+       console.log('Mostrando resumen de la cita:', cita); 
+    }
+    
+}   
