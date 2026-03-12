@@ -323,13 +323,31 @@ function mostrarResumen() {
     const nombreCliente = document.createElement('P');
     nombreCliente.innerHTML = `<span>Nombre:</span> ${nombre}`;
     const fechaCliente = document.createElement('P');
-    fechaCliente.innerHTML = `<span>Fecha:</span> ${fecha}`;
+
+    // Formatear la fecha a un formato más legible
+    const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES', opcionesFecha);
+
+    fechaCliente.innerHTML = `<span>Fecha:</span> ${fechaFormateada}`;
     const horaCliente = document.createElement('P');
     horaCliente.innerHTML = `<span>Hora:</span> ${hora} Horas`;
+
+    // boton para confirmar la cita
+    const botonConfirmar = document.createElement('BUTTON');
+    botonConfirmar.classList.add('boton');
+    botonConfirmar.textContent = 'Confirmar Cita';
+    botonConfirmar.onclick = reservarCita;
+
 
     // Agregar los detalles del cliente al resumen
     resumen.appendChild(nombreCliente);
     resumen.appendChild(fechaCliente);
     resumen.appendChild(horaCliente);
-
+    resumen.appendChild(botonConfirmar);
 }   
+
+// Función para reservar la cita
+function reservarCita()  {
+    console.log('Cita reservada:', cita);
+
+    }
