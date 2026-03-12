@@ -13,18 +13,18 @@ const cita = {
 
 // Esperar a que el DOM esté completamente cargado antes de ejecutar la función iniciarApp
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('[AppSalon] DOM cargado');
+    // console.log('[AppSalon] DOM cargado');
     try {
         iniciarApp();
     } catch (error) {
-        console.error('[AppSalon] Error al iniciar la app:', error);
+        // console.error('[AppSalon] Error al iniciar la app:', error);
     }
 });
 // Función para iniciar la app
 function iniciarApp() {
     const totalTabs = document.querySelectorAll('.tabs button').length;
     if (!totalTabs) {
-        console.warn('[AppSalon] No se encontraron tabs para iniciar la app');
+        // console.warn('[AppSalon] No se encontraron tabs para iniciar la app');
         return;
     }
 
@@ -133,7 +133,7 @@ function paginaAnterior() {
 async function consultarAPI() {
     try {
         const url = '/api/servicios';
-        console.log('[AppSalon] Consultando API:', url);
+        // console.log('[AppSalon] Consultando API:', url);
         const resultado = await fetch(url, {
             method: 'GET',
             cache: 'no-store',
@@ -142,17 +142,17 @@ async function consultarAPI() {
             }
         });
 
-        console.log('[AppSalon] Respuesta API:', resultado.status, resultado.statusText);
+        // console.log('[AppSalon] Respuesta API:', resultado.status, resultado.statusText);
 
         if (!resultado.ok) {
             throw new Error(`Error HTTP ${resultado.status}: ${resultado.statusText}`);
         }
 
         const servicios = await resultado.json();
-        console.log('Servicios cargados:', servicios);
+        // console.log('Servicios cargados:', servicios);
         mostrarServicios(servicios);
     } catch (error) {
-        console.error('No se pudieron cargar los servicios:', error);
+        // console.error('No se pudieron cargar los servicios:', error);
     }
 }   
 // Función para mostrar los servicios en el DOM
@@ -338,7 +338,6 @@ function mostrarResumen() {
     botonConfirmar.textContent = 'Confirmar Cita';
     botonConfirmar.onclick = reservarCita;
 
-
     // Agregar los detalles del cliente al resumen
     resumen.appendChild(nombreCliente);
     resumen.appendChild(fechaCliente);
@@ -347,7 +346,26 @@ function mostrarResumen() {
 }   
 
 // Función para reservar la cita
-function reservarCita()  {
-    console.log('Cita reservada:', cita);
+async function reservarCita()  {
 
-    }
+    const {nombre, fecha, hora, servicios} = cita;
+    const idServicios = servicios.map(servicio => servicio.id);
+    
+    const datos = new FormData();
+    datos.append('nombre', nombre);
+    datos.append('fecha', fecha);
+    datos.append('hora', hora);
+    datos.append('servicios', idServicios);
+
+    // petición a la API para guardar la cita
+    const url = 'http://appsalon_php_mvc_js_sass.local/api/citas';
+
+    const respuesta = await fetch(url, {
+        method: 'POST',
+        body: datos,
+        
+    });
+    const resultado = await respuesta.json();
+    // console.log(resultado);
+};
+

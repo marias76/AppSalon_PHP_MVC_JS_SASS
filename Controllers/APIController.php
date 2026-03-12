@@ -10,4 +10,17 @@ class APIController {
         echo json_encode($servicios);
 
     }
+    // Método para guardar una nueva cita desde la API
+    public static function guardar() {
+        $cita = new \Model\Cita($_POST);    
+        $resultado = $cita->guardar();
+
+        // $respuesta = [
+        //     'cita' => $cita    
+
+        // ];
+        
+        echo json_encode($resultado);
+    }
+
 }
