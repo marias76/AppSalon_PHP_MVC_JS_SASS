@@ -11,7 +11,7 @@ const cita = {
     servicios: []
 };
 
-// Función para iniciar la app
+// Esperar a que el DOM esté completamente cargado antes de ejecutar la función iniciarApp
 document.addEventListener('DOMContentLoaded', function() {
     console.log('[AppSalon] DOM cargado');
     try {
@@ -203,7 +203,7 @@ function seleccionarServicio(servicio) {
         divServicio.classList.add('seleccionado');
     }
 
-    console.log(cita);
+    // console.log(cita);
 }
 
 // Función para obtener el nombre del cliente
@@ -262,24 +262,74 @@ function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
         return;
     }
 
+    // Agregar la alerta al DOM
     referencia.appendChild(alerta);
 
+    // Eliminar la alerta después de 3 segundos
     if(desaparece){
         setTimeout(() => {
             alerta.remove();
         }, 3000);
     }
-
 }
+
 // Función para mostrar el resumen de la cita
 function mostrarResumen() {
     const resumen = document.querySelector('.contenido-resumen');
 
+    // limpiar resumen previo
+    while(resumen.firstChild){
+        resumen.removeChild(resumen.firstChild);
+    }   
+
+    // validar que todos los campos estén completos
     if(Object.values(cita).includes('') || cita.servicios.length === 0){
         mostrarAlerta('Faltan datos de la cita, asegúrate de completar nombre, fecha, hora y seleccionar al menos un servicio','error', '.contenido-resumen', false);
          return;
-    }else{
-       console.log('Mostrando resumen de la cita:', cita); 
     }
+
+    // formatear el resumen de la cita
+    const {nombre, fecha, hora, servicios} = cita;
+
+    // Crear los elementos para mostrar el resumen de la cita
+    const headingServicios = document.createElement('H3');
+    headingServicios.textContent = 'Resumen de Servicios';
+    resumen.appendChild(headingServicios);
     
+    // Iterar sobre los servicios seleccionados y agregarlos al resumen
+    servicios.forEach(servicio => {
+        const {id, precio, nombre} = servicio;
+        const contenedorServicio = document.createElement('DIV');
+        contenedorServicio.classList.add('contenedor-servicio');
+
+        const textoServicio = document.createElement('P');
+        textoServicio.textContent = nombre;
+
+        const precioServicio = document.createElement('P');
+        precioServicio.innerHTML = `<span>Precio:</span> $${precio}`;
+
+
+        contenedorServicio.appendChild(textoServicio);
+        contenedorServicio.appendChild(precioServicio);
+       resumen.appendChild(contenedorServicio);
+
+    });
+
+    // Crear los elementos para mostrar el resumen de la cita
+    const headingCita = document.createElement('H3');
+    headingCita.textContent = 'Resumen de Cita';
+    resumen.appendChild(headingCita);
+    
+    const nombreCliente = document.createElement('P');
+    nombreCliente.innerHTML = `<span>Nombre:</span> ${nombre}`;
+    const fechaCliente = document.createElement('P');
+    fechaCliente.innerHTML = `<span>Fecha:</span> ${fecha}`;
+    const horaCliente = document.createElement('P');
+    horaCliente.innerHTML = `<span>Hora:</span> ${hora} Horas`;
+
+    // Agregar los detalles del cliente al resumen
+    resumen.appendChild(nombreCliente);
+    resumen.appendChild(fechaCliente);
+    resumen.appendChild(horaCliente);
+
 }   
