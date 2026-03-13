@@ -1,5 +1,10 @@
 <!-- Vista para crear una nueva cita -->
 <h1 class="nombre-pagina">Crear Nueva Cita</h1>
+
+<!-- // Obtener el nombre del usuario desde la sesión -->
+<div class="barra">
+    <p>Hola: <?php echo s($nombre) ?? ''; ?></p>
+</div>
 <p class="descripcion-pagina">Elige tus servicios y completa la información para tu cita</p>
 
 <!-- Incluir el formulario de citas -->
