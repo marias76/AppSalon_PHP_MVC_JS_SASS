@@ -15,41 +15,45 @@ class LoginController {
 
         // revisar si el usuario esta enviando algo por post
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $auth = new Usuario($_POST);
-            $alertas = $auth->validarLogin();  
+            if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+                Usuario::setAlerta('error', 'Solicitud inválida');
+            } else {
+                $auth = new Usuario($_POST);
+                $alertas = $auth->validarLogin();  
 
-                // revisar que alertas este vacio
-            if(empty($alertas)){
-                /** @var Usuario|null $usuario */
-                $usuario = Usuario::where('email', $auth->email);
+                    // revisar que alertas este vacio
+                if(empty($alertas)){
+                    /** @var Usuario|null $usuario */
+                    $usuario = Usuario::where('email', $auth->email);
 
-                // Verificar que el usuario este confirmado
-                if($usuario){
-                    // Verificar password y confirmación
-                    $usuario->verificarPasswordAndVerificado($auth->password);
+                    // Verificar que el usuario este confirmado
+                    if($usuario){
+                        // Verificar password y confirmación
+                        $usuario->verificarPasswordAndVerificado($auth->password);
 
-                    // Solo iniciar sesión si NO hay alertas
-                    $alertas = Usuario::getAlertas();
-                    if(empty($alertas)) {
-                        if (session_status() !== PHP_SESSION_ACTIVE) {
-                            session_start();
+                        // Solo iniciar sesión si NO hay alertas
+                        $alertas = Usuario::getAlertas();
+                        if(empty($alertas)) {
+                            if (session_status() !== PHP_SESSION_ACTIVE) {
+                                session_start();
+                            }
+                            $_SESSION['id'] = $usuario->id; 
+                            $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
+                            $_SESSION['email'] = $usuario->email; 
+                            $_SESSION['login'] = true; 
+                            
+                            if($usuario->admin === "1") {
+                                $_SESSION['admin'] = $usuario->admin ?? null;
+                                header('Location: /cita');
+                                exit;
+                            } else {
+                                header('Location: /cita'); // revisa si tu ruta real es /cita o /citas
+                                exit;
+                            }
                         }
-                        $_SESSION['id'] = $usuario->id; 
-                        $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
-                        $_SESSION['email'] = $usuario->email; 
-                        $_SESSION['login'] = true; 
-                        
-                        if($usuario->admin === "1") {
-                            $_SESSION['admin'] = $usuario->admin ?? null;
-                            header('Location: /admin');
-                            exit;
-                        } else {
-                            header('Location: /cita'); // revisa si tu ruta real es /cita o /citas
-                            exit;
-                        }
+                    }else{
+                        Usuario::setAlerta('error', 'Usuario No Encontrado');
                     }
-                }else{
-                    Usuario::setAlerta('error', 'Usuario No Encontrado');
                 }
             }
         }
@@ -64,7 +68,20 @@ class LoginController {
     }
     // Cerrar Sesion
     public static function logout() {
-        echo "Desde el logoutController";
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+        }
+
+        session_destroy();
+        header('Location: /');
+        exit;
     }
     // Recuperar Password / Olvidé mi Password
     public static function olvide(Router $router) {
@@ -73,28 +90,32 @@ class LoginController {
 
         // revisar si el usuario esta enviando algo por post
         if($_SERVER['REQUEST_METHOD'] === 'POST') { 
-            $auth = new Usuario($_POST);
-            $alertas = $auth->validarEmail();  
+            if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+                Usuario::setAlerta('error', 'Solicitud inválida');
+            } else {
+                $auth = new Usuario($_POST);
+                $alertas = $auth->validarEmail();  
 
-            // revisar que alertas este vacio
-            if(empty($alertas)){
-                /** @var Usuario|null $usuario */
-                $usuario = Usuario::where('email', $auth->email);
-                // Verificar que el usuario exista y este confirmado
-                if($usuario && $usuario->confirmado === "1") {
-                    // Generar un token unico
-                    $usuario->crearToken();
-                    $usuario->guardar();
+                // revisar que alertas este vacio
+                if(empty($alertas)){
+                    /** @var Usuario|null $usuario */
+                    $usuario = Usuario::where('email', $auth->email);
+                    // Verificar que el usuario exista y este confirmado
+                    if($usuario && $usuario->confirmado === "1") {
+                        // Generar un token unico
+                        $usuario->crearToken();
+                        $usuario->guardar();
 
-                        // Alerta de exito
-                    Usuario::setAlerta('exito', 'Se han enviado las instrucciones a tu email');
+                            // Alerta de exito
+                        Usuario::setAlerta('exito', 'Se han enviado las instrucciones a tu email');
 
-                        // Enviar el email
-                    $email = new Email($usuario->email, $usuario->nombre, $usuario->token);
-                    $email->enviarInstrucciones();
-                    
-                } else {
-                    Usuario::setAlerta('error', 'El Usuario No Existe o no esta confirmado');
+                            // Enviar el email
+                        $email = new Email($usuario->email, $usuario->nombre, $usuario->token);
+                        $email->enviarInstrucciones();
+                        
+                    } else {
+                        Usuario::setAlerta('error', 'El Usuario No Existe o no esta confirmado');
+                    }
                 }
             }
         }
@@ -122,25 +143,29 @@ class LoginController {
             $error = true;
         }
         // Si el usuario existe, revisar si el usuario esta enviando algo por post
-        if($_SERVER['REQUEST_METHOD'] === 'POST') { 
-            // leer el nuevo password y guardarlo
-            $password = new Usuario($_POST);
-            $alertas = $password->validarPassword();  
+        if(!$error && $_SERVER['REQUEST_METHOD'] === 'POST') { 
+            if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+                Usuario::setAlerta('error', 'Solicitud inválida');
+            } else {
+                // leer el nuevo password y guardarlo
+                $password = new Usuario($_POST);
+                $alertas = $password->validarPassword();  
 
-            // revisar que alertas este vacio
-            if(empty($alertas)){
-                $usuario->password = null;
-                $usuario->password = $password->password;
-                $usuario->hashPassword();
-                $usuario->token = null;
+                // revisar que alertas este vacio
+                if(empty($alertas)){
+                    $usuario->password = null;
+                    $usuario->password = $password->password;
+                    $usuario->hashPassword();
+                    $usuario->token = null;
 
-                $resultado = $usuario->guardar();
-                if($resultado) {
-                    $_SESSION['alertas'] = [
-                        'exito' => ['Contraseña actualizada correctamente']
-                    ];
-                    header('Location: /');
-                    exit;
+                    $resultado = $usuario->guardar();
+                    if($resultado) {
+                        $_SESSION['alertas'] = [
+                            'exito' => ['Contraseña actualizada correctamente']
+                        ];
+                        header('Location: /');
+                        exit;
+                    }
                 }
             }
         }
@@ -162,6 +187,10 @@ class LoginController {
 
         // revisar si el usuario esta enviando algo por post
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+                    Usuario::setAlerta('error', 'Solicitud inválida');
+                    $alertas = Usuario::getAlertas();
+                } else {
                 $usuario->sincronizar($_POST);
                 $alertas = $usuario->validarNuevaCuenta(); 
                 // revisar que alertas este vacio
@@ -186,6 +215,7 @@ class LoginController {
                             exit;
                         }
                     }
+                }
                 }
         }
         // render a la vista

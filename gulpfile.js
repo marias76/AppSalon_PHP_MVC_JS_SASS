@@ -2,9 +2,12 @@ import path from 'path'
 import fs from 'fs'
 import { glob } from 'glob'
 import { src, dest, watch, series } from 'gulp'
-import sass from 'gulp-dart-sass'
+import * as dartSass from 'sass'
+import gulpSass from 'gulp-sass'
 import terser from 'gulp-terser'
 import sharp from 'sharp'
+
+const sassCompiler = gulpSass(dartSass)
 
 const paths = {
     scss: 'src/scss/**/*.scss',
@@ -13,9 +16,9 @@ const paths = {
 
 export function css( done ) {
     src(paths.scss, {sourcemaps: true})
-        .pipe( sass({
+        .pipe( sassCompiler({
             outputStyle: 'compressed'
-        }).on('error', sass.logError) )
+        }).on('error', sassCompiler.logError) )
         .pipe( dest('./public/build/css', {sourcemaps: '.'}) );
     done()
 }

@@ -10,6 +10,7 @@
 
 <!-- Formulario para ingresar la nueva contraseña -->
 <form class="formulario" method="post">
+    <input type="hidden" name="csrf_token" value="<?php echo s(csrf_token()); ?>">
     <div class="campo">
         <label for="password">Nueva Contraseña</label>
         <input type="password" id="password" name="password" placeholder="Tu nueva contraseña">

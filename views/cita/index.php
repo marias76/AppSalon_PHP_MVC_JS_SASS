@@ -21,6 +21,7 @@
         <p class="text-center">Coloca Tús Datos y Fecha de túCita</p>
 
         <form class="formulario">
+            <input type="hidden" id="csrf_token" value="<?php echo s(csrf_token()); ?>">
             <div class="campo">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" placeholder="Tu Nombre" value="<?php echo $nombre; ?>" disabled>
@@ -33,8 +34,6 @@
                 <label for="hora">Hora</label>
                 <input type="time" id="hora">
             </div>
-            <!-- Campo oculto para almacenar el ID del cliente -->
-            <input type="hidden" id="id" value="<?php echo $id; ?>">
         </form>
     </div>    
     <div id="paso-3" class="seccion contenido-resumen">

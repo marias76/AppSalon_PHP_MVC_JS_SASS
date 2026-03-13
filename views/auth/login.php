@@ -7,6 +7,7 @@
 
 <!-- Formulario de inicio de sesión -->
 <form class="formulario" method="post" action="/">
+    <input type="hidden" name="csrf_token" value="<?php echo s(csrf_token()); ?>">
 
     <div class="campo">
         <label for="email">Email</label>

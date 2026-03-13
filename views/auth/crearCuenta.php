@@ -5,23 +5,31 @@
 <!-- Incluir el archivo de alertas para mostrar mensajes de error o éxito -->
 <?php include __DIR__ . '/../templates/alertas.php'; ?>
 
+<?php
+$nombre = isset($usuario) && is_object($usuario) ? $usuario->nombre : '';
+$apellido = isset($usuario) && is_object($usuario) ? $usuario->apellido : '';
+$telefono = isset($usuario) && is_object($usuario) ? $usuario->telefono : '';
+$email = isset($usuario) && is_object($usuario) ? $usuario->email : '';
+?>
+
 <!-- Formulario de creación de cuenta -->
 <form class="formulario" method="post" action="/crearCuenta">
+    <input type="hidden" name="csrf_token" value="<?php echo s(csrf_token()); ?>">
     <div class="campo">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" value="<?php echo $usuario->nombre; ?>">
+        <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" value="<?php echo s($nombre); ?>">
     </div>
     <div class="campo">
         <label for="apellido">Apellidos</label>
-        <input type="text" id="apellido" name="apellido" placeholder="Tus Apellidos" value="<?php echo $usuario->apellido; ?>">
+        <input type="text" id="apellido" name="apellido" placeholder="Tus Apellidos" value="<?php echo s($apellido); ?>">
     </div>
     <div class="campo">
         <label for="telefono">Teléfono</label>
-        <input type="text" id="telefono" name="telefono" placeholder="Tu Teléfono" value="<?php echo $usuario->telefono; ?>">
+        <input type="text" id="telefono" name="telefono" placeholder="Tu Teléfono" value="<?php echo s($telefono); ?>">
     </div>
     <div class="campo">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Tu Email" value="<?php echo $usuario->email; ?>">
+        <input type="email" id="email" name="email" placeholder="Tu Email" value="<?php echo s($email); ?>">
     </div>
     <div class="campo">
         <label for="password">Contraseña</label>

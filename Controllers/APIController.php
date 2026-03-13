@@ -6,22 +6,61 @@ namespace Controllers;
 class APIController {
     // Método para obtener los servicios en formato JSON
     public static function index() {
+        isAuth();
+
+        header('Content-Type: application/json; charset=utf-8');
         $servicios = \Model\Servicio::all();
         echo json_encode($servicios);
 
     }
     // Método para guardar una nueva cita desde la API
     public static function guardar() {
+        isAuth();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
+            echo json_encode(['resultado' => false, 'mensaje' => 'Solicitud inválida']);
+            return;
+        }
+
+        $fecha = $_POST['fecha'] ?? '';
+        $hora = $_POST['hora'] ?? '';
+        $servicios = $_POST['servicios'] ?? '';
+        $usuarioId = $_SESSION['id'] ?? null;
+
+        if(!$usuarioId || !$fecha || !$hora || !$servicios) {
+            http_response_code(400);
+            echo json_encode(['resultado' => false, 'mensaje' => 'Datos incompletos']);
+            return;
+        }
 
         // Recibir los datos de la cita desde la solicitud POST
-        $cita = new \Model\Cita($_POST);    
+        $cita = new \Model\Cita([
+            'fecha' => $fecha,
+            'hora' => $hora,
+            'usuarioId' => $usuarioId
+        ]);
         $resultado = $cita->guardar();
+
+        if(empty($resultado['resultado']) || empty($resultado['id'])) {
+            http_response_code(500);
+            echo json_encode(['resultado' => false, 'mensaje' => 'No se pudo guardar la cita']);
+            return;
+        }
 
         // Obtener el ID del cliente recién creado
         $id = $resultado['id'];
 
         // Devolver el resultado en formato JSON
-        $idServicios = explode(',', $_POST['servicios']);
+        $idServicios = array_filter(array_map('intval', explode(',', $servicios)));
+
+        if(empty($idServicios)) {
+            http_response_code(400);
+            echo json_encode(['resultado' => false, 'mensaje' => 'Servicios inválidos']);
+            return;
+        }
 
         // Guardar la relación entre la cita y los servicios seleccionados
         foreach ($idServicios as $idServicio) {

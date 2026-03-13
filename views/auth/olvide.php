@@ -7,6 +7,7 @@
 
 <!-- Formulario para recuperar contraseña -->
 <form  class="formulario" action="/olvide" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo s(csrf_token()); ?>">
     <div class="campo">
         <label for="email">Correo Electrónico</label>
         <input type="email" id="email" name="email" placeholder="Tu correo electrónico" value="<?php echo s($email ?? ''); ?>">
