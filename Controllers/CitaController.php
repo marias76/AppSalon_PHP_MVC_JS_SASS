@@ -7,6 +7,8 @@ use MVC\Router;
 class CitaController {
     // Método para mostrar la página de creación de citas
     public static function index(Router $router) {
+        isAuth(); // Verificar si el usuario está autenticado
+        
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -18,7 +20,8 @@ class CitaController {
 
         // Renderizar la vista de creación de citas
         $router->render('cita/index', [
-            'nombre' => $_SESSION['nombre']
+            'nombre' => $_SESSION['nombre'],
+            'id' => $_SESSION['id']
         ]);
     }
 }

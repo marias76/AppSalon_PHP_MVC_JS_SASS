@@ -5,6 +5,7 @@ let pasoFinal = 3;
 
 // Objeto para almacenar la información de la cita
 const cita = {  
+    id: '',
     nombre: '',
     fecha: '',
     hora: '',
@@ -35,6 +36,7 @@ function iniciarApp() {
     paginaSiguiente(); // Función para manejar el botón siguiente
     paginaAnterior(); // Función para manejar el botón anterior
     consultarAPI(); // Función para consultar la API de PHP
+    idCliente(); // Función para obtener el ID del cliente
     nombreCliente(); // Función para obtener el nombre del cliente
     seleccionarFecha(); // Función para obtener la fecha de la cita
     seleccionarHora(); // Función para obtener la hora de la cita
@@ -210,6 +212,10 @@ function seleccionarServicio(servicio) {
 function nombreCliente() {
     cita.nombre = document.querySelector('#nombre').value;
 }
+// Función para obtener el ID del cliente
+function idCliente() {
+    cita.id = document.querySelector('#id').value;
+}
 
 // Función para obtener la fecha de la cita
 function seleccionarFecha(){
@@ -348,24 +354,42 @@ function mostrarResumen() {
 // Función para reservar la cita
 async function reservarCita()  {
 
-    const {nombre, fecha, hora, servicios} = cita;
+    const {nombre, fecha, hora, servicios, id} = cita;
     const idServicios = servicios.map(servicio => servicio.id);
     
     const datos = new FormData();
-    datos.append('nombre', nombre);
     datos.append('fecha', fecha);
     datos.append('hora', hora);
+    datos.append('usuarioId', id);
     datos.append('servicios', idServicios);
 
-    // petición a la API para guardar la cita
-    const url = 'http://appsalon_php_mvc_js_sass.local/api/citas';
+    try {
+        // petición a la API para guardar la cita
+            const url = 'http://appsalon_php_mvc_js_sass.local/api/citas';
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                body: datos,
+                
+            });
+            const resultado = await respuesta.json();
+            // console.log(resultado.resultado);
+            if(resultado.resultado){
+                Swal.fire(
+                    'Cita Agendada',
+                    'Tu cita se ha agendado correctamente',
+                    'success'
+                ).then(() => {
+                    window.location.reload();
+                });
+            } 
 
-    const respuesta = await fetch(url, {
-        method: 'POST',
-        body: datos,
-        
-    });
-    const resultado = await respuesta.json();
-    // console.log(resultado);
+    } catch (error) {
+        // console.error('Error al reservar la cita:', error);
+        Swal.fire({
+                icon: "error",
+                title: "Error.....",
+                text: "Hubo un error al reservar tu cita. Por favor, intenta nuevamente.",                
+                });
+    }
 };
 
