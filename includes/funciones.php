@@ -8,11 +8,20 @@ function debuguear($variable) : string {
 }
 
 // Escapa / Sanitizar el HTML
-function s($html) : string {
-    $s = htmlspecialchars($html);
+function s(?string $html) : string {
+    $s = htmlspecialchars($html ?? '', ENT_QUOTES, 'UTF-8');
     return $s;
 }
 
+// Verificar si el servicio actual es el último de la cita para mostrar un separador
+function esUltimo( string $actual, string $proximo) : bool {
+    if ($actual !== $proximo) {
+        return true;
+    }
+    return false;
+}
+
+// Generar un token CSRF
 function csrf_token() : string {
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
@@ -25,6 +34,7 @@ function csrf_token() : string {
     return $_SESSION['csrf_token'];
 }
 
+// Validar el token CSRF
 function validar_csrf(?string $token) : bool {
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
@@ -38,7 +48,7 @@ function validar_csrf(?string $token) : bool {
 }
 
 // Verificar si el usuario esta autenticado
-function isAuth() {
+function isAuth() : void {
  if(!isset($_SESSION['login'])) {
     header('Location: /');
     exit;   

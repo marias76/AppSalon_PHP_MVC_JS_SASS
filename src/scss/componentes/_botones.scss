@@ -6,3 +6,9 @@
     @include m.boton(v.$azul,v.$blanco);    
 }
 
+.buqueda .formulario-acciones .boton {
+    margin: 0;
+    width: auto;
+    display: inline-block;
+    padding: 1rem 2rem;
+}

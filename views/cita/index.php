@@ -1,10 +1,8 @@
 <!-- Vista para crear una nueva cita -->
 <h1 class="nombre-pagina">Crear Nueva Cita</h1>
 
-<!-- // Obtener el nombre del usuario desde la sesión -->
-<div class="barra">
-    <p>Hola: <?php echo s($nombre) ?? ''; ?></p>
-</div>
+<?php include_once __DIR__ . '/../templates/barra.php'; ?>
+
 <p class="descripcion-pagina">Elige tus servicios y completa la información para tu cita</p>
 
 <!-- Incluir el formulario de citas -->
@@ -23,7 +21,7 @@
     </div>
     <div id="paso-2" class="seccion">
         <h2>Tus Datos y Cita</h2>
-        <p class="text-center">Coloca Tús Datos y Fecha de túCita</p>
+        <p class="text-center">Coloca Tús Datos y Fecha de tú Cita</p>
 
         <form class="formulario">
             <input type="hidden" id="csrf_token" value="<?php echo s(csrf_token()); ?>">

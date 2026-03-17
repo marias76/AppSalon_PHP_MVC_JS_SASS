@@ -1,28 +1,28 @@
 <?php
-namespace Model;
 
-//Modelo para las citas
-class Cita extends ActiveRecord {
-    protected static $tabla = 'citas';
-    protected static $columnasDB = ['id', 'fecha', 'hora', 'usuarioId'];
+namespace Controllers;  
+use MVC\Router; 
+// Controlador para el área de administración de citas
+class AdminCita extends AdminController {
+    protected static $tabla = 'citasservicios';
+    protected static $columnasDB = ['id', 'hora', 'cliente', 'email', 'telefono', 'servicio', 'precio'];
+
     public $id;
-    public $fecha;
     public $hora;
-    public $usuarioId;
     public $cliente;
     public $email;
     public $telefono;
     public $servicio;
     public $precio;
+
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
-        $this->fecha = $args['fecha'] ?? '';
         $this->hora = $args['hora'] ?? '';
-        $this->usuarioId = $args['usuarioId'] ?? '';
         $this->cliente = $args['cliente'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
         $this->servicio = $args['servicio'] ?? '';
         $this->precio = $args['precio'] ?? '';
     }
+
 }

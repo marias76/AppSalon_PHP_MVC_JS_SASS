@@ -16,6 +16,7 @@
         flex: 0 0 10rem;
         
     }
+
     input{
         flex: 1;
         border: none;
@@ -27,6 +28,15 @@
         cursor: not-allowed;
     }
       
+    }
+}
+
+.buqueda {
+    .formulario-acciones {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
     }
 }
 

@@ -137,6 +137,13 @@ class ActiveRecord {
         return array_shift( $resultado ) ;
     }
 
+    // Consulta SQL personalizada
+    public static function SQL($consulta) {
+        $query = $consulta;
+        $resultado = self::consultarSQL($query);        
+        return $resultado;        
+    }
+
     // Obtener Registros con cierta cantidad
     public static function get($limite) {
         $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";

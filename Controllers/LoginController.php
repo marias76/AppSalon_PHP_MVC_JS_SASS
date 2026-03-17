@@ -44,7 +44,7 @@ class LoginController {
                             
                             if($usuario->admin === "1") {
                                 $_SESSION['admin'] = $usuario->admin ?? null;
-                                header('Location: /cita');
+                                header('Location: /admin');
                                 exit;
                             } else {
                                 header('Location: /cita'); // revisa si tu ruta real es /cita o /citas

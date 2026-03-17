@@ -27,3 +27,15 @@
         padding: 3rem 0;;
     }
 }
+// Barra de navegación
+.barra{
+    margin: v.$separacion 0;
+    @include m.tablet {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .boton{
+        @include m.boton(v.$verde, v.$blanco);
+    }
+}

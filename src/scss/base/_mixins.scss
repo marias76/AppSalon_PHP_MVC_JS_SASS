@@ -48,7 +48,7 @@
     &:hover {
         background-color: color.adjust($bgColor, $lightness: -10%);
         cursor: pointer;
-    }
+    }    
 }
 
 @mixin grid($columnas, $espaciado ) {
