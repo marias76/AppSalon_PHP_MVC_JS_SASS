@@ -9,19 +9,21 @@
             <label for="fecha">Filtrar por Fecha</label>
             <input type="date" id="fecha" name="fecha" value="<?php echo s($fecha ?? ''); ?>">
         </div>
+          
         <div class="formulario-acciones">
-            <button type="submit" class="boton">Buscar</button>
-            <?php if (!empty($fecha)) { ?>
-            <a href="/admin" class="boton">Limpiar</a>
+            <!-- <button type="submit" class="boton">Buscar</button> -->
+            <?php if (isset($fecha) && $fecha !== date('Y-m-d')) { ?>
+            <a href="/admin" class="boton">Hoy</a>
             <?php } ?>
         </div>
+            
     </form>
 </div>
 
 <div id="citas-admin">
     <!-- Si no hay citas, mostrar un mensaje -->
     <?php if (empty($citas)) { ?>
-    <p class="alerta">No hay citas<?php echo !empty($fecha) ? ' para la fecha seleccionada.' : ' registradas.'; ?></p>
+    <p class="alerta">No hay citas para <?php echo s($fecha) === date('Y-m-d') ? 'hoy' : 'la fecha seleccionada'; ?>.</p>
     <?php } else { ?>
     <p class="subtitulo">Total: <?php echo s($totalCitas); ?> cita<?php echo $totalCitas !== 1 ? 's' : ''; ?></p>
     <!--  Listado de citas -->
@@ -63,3 +65,8 @@
     </ul>
     <?php } ?>
 </div>
+
+<?php
+    $script = "<script src='build/js/buscador.js'></script>";
+?>
+

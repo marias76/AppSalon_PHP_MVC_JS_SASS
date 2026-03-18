@@ -14,7 +14,12 @@ class AdminController {
             exit;
         }
 
-        $fecha = $_GET['fecha'] ?? '';
+        $fecha = $_GET['fecha'] ?? date('Y-m-d');
+
+        // Validar formato de fecha para evitar inyección SQL
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            $fecha = date('Y-m-d');
+        }
 
         $consulta = "SELECT citas.id, citas.fecha, citas.hora, CONCAT(usuarios.nombre, ' ', usuarios.apellido) AS cliente, ";
         $consulta .= "usuarios.email, usuarios.telefono, servicios.nombre AS servicio, servicios.precio ";
