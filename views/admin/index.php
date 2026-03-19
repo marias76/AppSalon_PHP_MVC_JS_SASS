@@ -1,9 +1,11 @@
+<!-- // views/admin/index.php -->
 <h1 class="nombre-pagina">Panel de Administración</h1>
+
 <?php include_once __DIR__ . '/../templates/barra.php'; ?>
 
 <h2>Citas</h2>
-
-<div class="buqueda">
+<!-- // Barra de búsqueda para filtrar citas por fecha -->
+<div class="busqueda">
     <form class="formulario" method="get" action="/admin">
         <div class="campo">
             <label for="fecha">Filtrar por Fecha</label>
@@ -13,19 +15,20 @@
         <div class="formulario-acciones">
             <!-- <button type="submit" class="boton">Buscar</button> -->
             <?php if (isset($fecha) && $fecha !== date('Y-m-d')) { ?>
-            <a href="/admin" class="boton">Hoy</a>
+            <a href="/admin" class="boton">Hoy</a>            
             <?php } ?>
         </div>
             
     </form>
 </div>
 
+<!-- // Si se ha seleccionado una fecha, mostrar un mensaje indicando la fecha seleccionada -->
 <div id="citas-admin">
     <!-- Si no hay citas, mostrar un mensaje -->
     <?php if (empty($citas)) { ?>
     <p class="alerta">No hay citas para <?php echo s($fecha) === date('Y-m-d') ? 'hoy' : 'la fecha seleccionada'; ?>.</p>
     <?php } else { ?>
-    <p class="subtitulo">Total: <?php echo s($totalCitas); ?> cita<?php echo $totalCitas !== 1 ? 's' : ''; ?></p>
+    <p class="subtitulo js-total-citas">Total: <?php echo s($totalCitas); ?> cita<?php echo $totalCitas !== 1 ? 's' : ''; ?></p>
     <!--  Listado de citas -->
     <ul class="citas">
         <?php 
@@ -56,7 +59,13 @@
 
                         if(esUltimo($actual, $proximo)){
                             $total = number_format($total, 2); // Formatear el total a 2 decimales
-                    ?>
+
+                            ?>
+                            <form action="/api/eliminar" method="post" class="js-eliminar-cita">
+                                <input type="hidden" name="id" value="<?php echo s($cita->id); ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo s($_SESSION['csrf_token']); ?>">
+                                <button type="submit" class="boton boton-eliminar">Eliminar</button>
+                            </form>
             <p class="total">Total: <span><?php echo s($total); ?></span></p>
         </li>
         <?php } ?>
@@ -66,7 +75,13 @@
     <?php } ?>
 </div>
 
+<!-- // Incluir el script para el buscador de citas por fecha -->
 <?php
-    $script = "<script src='build/js/buscador.js'></script>";
+    $rutaScript = __DIR__ . '/../../public/build/js/buscador.js';
+    $versionScript = file_exists($rutaScript) ? filemtime($rutaScript) : time();
+    $script = "
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script src='/build/js/buscador.js?v={$versionScript}'></script>
+    ";
 ?>
 

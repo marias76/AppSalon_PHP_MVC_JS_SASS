@@ -109,4 +109,45 @@ class APIController {
         $citas = \Model\Cita::consultarSQL($consulta);
         echo json_encode($citas);
     }
-}
+
+// Método para eliminar una cita desde la API
+    public static function eliminar() {
+        isAuth();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+         if(!validar_csrf($_POST['csrf_token'] ?? null)) {
+             http_response_code(403);
+             echo json_encode(['resultado' => false, 'mensaje' => 'Solicitud inválida']);
+             return;
+         }
+
+         $id = $_POST['id'] ?? null;
+
+         if(!$id) {
+             http_response_code(400);
+             echo json_encode(['resultado' => false, 'mensaje' => 'ID de cita no proporcionado']);
+             return;
+         }
+
+         $cita = \Model\Cita::find($id);
+
+         if(!$cita) {
+             http_response_code(404);
+             echo json_encode(['resultado' => false, 'mensaje' => 'Cita no encontrada']);
+             return;
+         }
+
+         $resultado = $cita->eliminar();
+
+         if(!$resultado) {
+             http_response_code(500);
+             echo json_encode(['resultado' => false, 'mensaje' => 'No se pudo eliminar la cita']);
+             return;
+         }
+
+         echo json_encode(['resultado' => true, 'mensaje' => 'Cita eliminada correctamente']);
+     }
+
+
+}    

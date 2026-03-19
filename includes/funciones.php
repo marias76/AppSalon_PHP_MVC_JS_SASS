@@ -54,4 +54,10 @@ function isAuth() : void {
     exit;   
  }
 }
-
+// Verificar si el usuario es admin
+function isAdmin() : void {
+    if(!isset($_SESSION['admin']) || !$_SESSION['admin']) {
+       header('Location: /');
+       exit;   
+    }
+ }
