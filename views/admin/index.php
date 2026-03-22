@@ -4,6 +4,7 @@
 <?php include_once __DIR__ . '/../templates/barra.php'; ?>
 
 <h2>Citas</h2>
+<?php $citasDisponibles = is_array($citasDisponibles ?? null) ? $citasDisponibles : []; ?>
 <!-- // Barra de búsqueda para filtrar citas por fecha -->
 <div class="busqueda">
     <form class="formulario" method="get" action="/admin">
@@ -11,9 +12,24 @@
             <label for="fecha">Filtrar por Fecha</label>
             <input type="date" id="fecha" name="fecha" value="<?php echo s($fecha ?? ''); ?>">
         </div>
+
+        <div class="campo">
+            <label for="cita">Buscar Cita (Fecha y Hora)</label>
+            <select id="cita" name="cita">
+                <option value="">-- Todas las citas del filtro por fecha --</option>
+                <?php foreach ($citasDisponibles as $citaDisponible) { ?>
+                <?php if (!is_object($citaDisponible)) { continue; } ?>
+                <option value="<?php echo s($citaDisponible->id); ?>" <?php echo (int)($citaId ?? 0) === (int)$citaDisponible->id ? 'selected' : ''; ?>>
+                    <?php echo s($citaDisponible->fecha); ?> - <?php echo s($citaDisponible->hora); ?>
+                </option>
+                <?php } ?>
+            </select>
+        </div>
           
         <div class="formulario-acciones">
-            <!-- <button type="submit" class="boton">Buscar</button> -->
+            <?php if ((int)($citaId ?? 0) > 0) { ?>
+            <a href="/admin" class="boton">Limpiar cita</a>
+            <?php } ?>
             <?php if (isset($fecha) && $fecha !== date('Y-m-d')) { ?>
             <a href="/admin" class="boton">Hoy</a>            
             <?php } ?>

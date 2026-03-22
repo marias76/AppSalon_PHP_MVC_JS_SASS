@@ -15,6 +15,7 @@ const toastAdmin = typeof Swal !== 'undefined'
 
 function iniciarApp() {
    buscarPorFecha();
+    buscarPorCita();
    eliminarCita();
 }   
 function buscarPorFecha() {
@@ -28,6 +29,27 @@ function buscarPorFecha() {
 
         window.location = `?fecha=${fechaSeleccionada}`;
         
+    });
+}
+
+function buscarPorCita() {
+    const citaSelect = document.querySelector('#cita');
+    if (!citaSelect) {
+        return;
+    }
+
+    citaSelect.addEventListener('change', function(event) {
+        const citaSeleccionada = event.target.value;
+
+        if (citaSeleccionada) {
+            window.location = `?cita=${citaSeleccionada}`;
+            return;
+        }
+
+        const fechaInput = document.querySelector('#fecha');
+        const fechaSeleccionada = fechaInput?.value;
+
+        window.location = fechaSeleccionada ? `?fecha=${fechaSeleccionada}` : '/admin';
     });
 }
 

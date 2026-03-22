@@ -329,8 +329,10 @@ function mostrarResumen() {
     const fechaCliente = document.createElement('P');
 
     // Formatear la fecha a un formato más legible
+    // Se construye como fecha local (no UTC) para evitar desfase de zona horaria
     const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES', opcionesFecha);
+    const [anio, mes, dia] = fecha.split('-').map(Number);
+    const fechaFormateada = new Date(anio, mes - 1, dia).toLocaleDateString('es-ES', opcionesFecha);
 
     fechaCliente.innerHTML = `<span>Fecha:</span> ${fechaFormateada}`;
     const horaCliente = document.createElement('P');

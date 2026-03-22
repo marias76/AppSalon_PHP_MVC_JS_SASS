@@ -7,7 +7,6 @@ use MVC\Router;
 class ServcioController {
     // Método para mostrar los servicios (puede ser utilizado para una API o para renderizar una vista)
     public static function index(Router $router) {
-        
         isAuth();
          $router->render('servicios/index', [
             
@@ -48,6 +47,4 @@ class ServcioController {
 
          }
     }
-
-
 }

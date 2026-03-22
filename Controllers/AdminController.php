@@ -16,6 +16,7 @@ class AdminController {
         }
 
         $fecha = $_GET['fecha'] ?? date('Y-m-d');
+        $citaId = isset($_GET['cita']) ? (int) $_GET['cita'] : 0;
         $fechas = explode('-', $fecha);
 
         if(!checkdate($fechas[1], $fechas[2], $fechas[0])){
@@ -34,12 +35,17 @@ class AdminController {
         $consulta .= "LEFT JOIN usuarios ON citas.usuarioId = usuarios.id ";
         $consulta .= "LEFT JOIN citasservicios ON citasservicios.citaId = citas.id ";
         $consulta .= "LEFT JOIN servicios ON servicios.id = citasservicios.servicioId ";
-        if (!empty($fecha)) {
+        if ($citaId > 0) {
+            $consulta .= "WHERE citas.id = {$citaId} ";
+        } elseif (!empty($fecha)) {
             $consulta .= "WHERE citas.fecha = '{$fecha}' ";
         }
         $consulta .= "ORDER BY citas.fecha ASC, citas.hora ASC";
 
         $citas = Cita::consultarSQL($consulta);
+
+        $consultaCitasDisponibles = "SELECT id, fecha, hora FROM citas ORDER BY fecha DESC, hora DESC";
+        $citasDisponibles = Cita::consultarSQL($consultaCitasDisponibles);
 
         // El JOIN con servicios devuelve una fila por servicio, por eso contamos IDs de cita únicos.
         $citasUnicas = [];
@@ -51,7 +57,9 @@ class AdminController {
         $router->render('admin/index', [
             'nombre' => $_SESSION['nombre'] ?? '',
             'fecha' => $fecha,
+            'citaId' => $citaId,
             'citas' => $citas,
+            'citasDisponibles' => $citasDisponibles,
             'totalCitas' => $totalCitas
         ]);
     }
